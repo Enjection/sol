@@ -4,6 +4,18 @@ import LaunchAtLogin
 
 private let keychain = Keychain(service: "Sol")
 
+private func solLog(_ msg: String) {
+  let line = "[\(Date())] \(msg)\n"
+  let path = "/tmp/sol-debug.log"
+  if let handle = FileHandle(forWritingAtPath: path) {
+    handle.seekToEndOfFile()
+    handle.write(line.data(using: .utf8)!)
+    handle.closeFile()
+  } else {
+    FileManager.default.createFile(atPath: path, contents: line.data(using: .utf8))
+  }
+}
+
 @objc(SolNative)
 class SolNative: RCTEventEmitter {
   let appDelegate = NSApp.delegate as? AppDelegate
@@ -70,7 +82,89 @@ class SolNative: RCTEventEmitter {
   }
 
   @objc func openFile(_ path: String) {
-    // This is deprecated but it opens the apps with a single line of code
+    solLog("openFile called with path: \(path)")
+    // If the path is a .app and it's already running, move its frontmost window
+    // to the current workspace instead of switching Spaces
+    let cleanPath = path.hasSuffix("/") ? String(path.dropLast()) : path
+    solLog("cleanPath: \(cleanPath), hasSuffix .app: \(cleanPath.hasSuffix(".app"))")
+    let appUrl: URL? = URL(fileURLWithPath: cleanPath)
+    solLog("appUrl: \(String(describing: appUrl))")
+    let bundle = appUrl.flatMap { Bundle(url: $0) }
+    solLog("bundle: \(String(describing: bundle)), bundleId: \(String(describing: bundle?.bundleIdentifier))")
+    let bundleId = bundle?.bundleIdentifier
+    let runningApp = bundleId != nil ? NSRunningApplication.runningApplications(withBundleIdentifier: bundleId!).first : nil
+    solLog("runningApp: \(String(describing: runningApp)), terminated: \(String(describing: runningApp?.isTerminated))")
+    if cleanPath.hasSuffix(".app"),
+       let appUrl = appUrl,
+       let bundle = bundle,
+       let bundleId = bundleId,
+       let runningApp = runningApp,
+       runningApp.isTerminated == false
+    {
+      let pid = runningApp.processIdentifier
+      solLog("App is running: \(bundleId) pid=\(pid)")
+      let axApp = AXUIElementCreateApplication(pid)
+
+      // Get the focused window, or fall back to the first window
+      var windowRef: AnyObject?
+      var axWindow: AXUIElement?
+
+      if AXUIElementCopyAttributeValue(axApp, kAXFocusedWindowAttribute as CFString, &windowRef) == .success {
+        axWindow = (windowRef as! AXUIElement)
+      } else {
+        var windowList: AnyObject?
+        if AXUIElementCopyAttributeValue(axApp, kAXWindowsAttribute as CFString, &windowList) == .success,
+           let windows = windowList as? [AXUIElement],
+           let firstWindow = windows.first {
+          axWindow = firstWindow
+        }
+      }
+
+      var windowID: CGWindowID = 0
+
+      if let axWindow = axWindow {
+        _AXUIElementGetWindow(axWindow, &windowID)
+      }
+
+      // If AX couldn't find windows (app on another space), use CGWindowList
+      if windowID == 0 {
+        if let windowInfoList = CGWindowListCopyWindowInfo([.optionAll], kCGNullWindowID) as? [[String: Any]] {
+          var bestWid: Int = 0
+          var bestArea: Int = 0
+          for info in windowInfoList {
+            guard let ownerPID = info[kCGWindowOwnerPID as String] as? Int32,
+                  ownerPID == pid,
+                  let wid = info[kCGWindowNumber as String] as? Int,
+                  let layer = info[kCGWindowLayer as String] as? Int,
+                  layer == 0,
+                  let bounds = info[kCGWindowBounds as String] as? [String: Any],
+                  let w = bounds["Width"] as? Int,
+                  let h = bounds["Height"] as? Int else { continue }
+            let area = w * h
+            if area > bestArea {
+              bestArea = area
+              bestWid = wid
+            }
+          }
+          if bestWid != 0 {
+            windowID = CGWindowID(bestWid)
+          }
+        }
+      }
+
+      solLog("windowID=\(windowID) (0 means not found)")
+      if windowID != 0 {
+        SpacesMover.moveWindowToCurrentSpace(windowID: windowID)
+      }
+
+      runningApp.activate()
+      if let axWindow = axWindow {
+        AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString)
+      }
+      return
+    }
+
+    // Not running or not an app — use default behavior
     NSWorkspace.shared.openFile(path)
   }
 
@@ -203,9 +297,13 @@ class SolNative: RCTEventEmitter {
   }
 
   @objc func setLaunchAtLogin(_ enabled: Bool) {
-    if LaunchAtLogin.isEnabled != enabled {
-      LaunchAtLogin.isEnabled = enabled
-    }
+    #if DEBUG
+      return
+    #else
+      if LaunchAtLogin.isEnabled != enabled {
+        LaunchAtLogin.isEnabled = enabled
+      }
+    #endif
   }
 
   @objc func resizeFrontmostTopHalf() {

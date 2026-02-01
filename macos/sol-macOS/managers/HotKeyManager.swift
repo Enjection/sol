@@ -4,7 +4,7 @@ import Foundation
 import HotKey
 
 final class HotKeyManager {
-  let handledKeys: [UInt16] = [53, 123, 124, 126, 125, 36, 48]
+  let handledKeys: [UInt16] = [53, 123, 124, 126, 125, 36, 76, 48]
   let numberchars: [String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
   public var catchHorizontalArrowsPress = false
   public var catchVerticalArrowsPress = true
@@ -48,7 +48,7 @@ final class HotKeyManager {
         return $0
       }
 
-      if $0.keyCode == 36 && !self.catchEnterPress {
+      if ($0.keyCode == 36 || $0.keyCode == 76) && !self.catchEnterPress {
         return $0
       }
 

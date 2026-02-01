@@ -23,6 +23,7 @@
 		701086A727989798004C8CCD /* SolEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701086A627989798004C8CCD /* SolEmitter.swift */; };
 		70142B3B2D21812500EA565F /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70142B3A2D21812500EA565F /* KeychainAccess.swift */; };
 		701EC4612822E33B00597D99 /* AccessibilityElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701EC4602822E33B00597D99 /* AccessibilityElement.swift */; };
+		AA00000220260201AABBCC01 /* SpacesMover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000120260201AABBCC01 /* SpacesMover.swift */; };
 		7023959C2EA580A700CF7802 /* ShellOutputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7023959B2EA580A700CF7802 /* ShellOutputView.swift */; };
 		703407412DD71869004D7D3D /* JetBrainsMono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 703407402DD71869004D7D3D /* JetBrainsMono.ttf */; };
 		7034504028238AAB00240BDD /* ScreenDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7034503F28238AAB00240BDD /* ScreenDetector.swift */; };
@@ -94,6 +95,7 @@
 		701086A82798C231004C8CCD /* sol-macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "sol-macOS.entitlements"; sourceTree = "<group>"; };
 		70142B3A2D21812500EA565F /* KeychainAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAccess.swift; sourceTree = "<group>"; };
 		701EC4602822E33B00597D99 /* AccessibilityElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityElement.swift; sourceTree = "<group>"; };
+		AA00000120260201AABBCC01 /* SpacesMover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesMover.swift; sourceTree = "<group>"; };
 		7023959B2EA580A700CF7802 /* ShellOutputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellOutputView.swift; sourceTree = "<group>"; };
 		703407402DD71869004D7D3D /* JetBrainsMono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = JetBrainsMono.ttf; sourceTree = "<group>"; };
 		7034503F28238AAB00240BDD /* ScreenDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenDetector.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				7047E80527D4D31400582E1B /* MediaHelper.swift */,
 				70BED7CA27F4C1A600906E41 /* FileConstants.swift */,
 				701EC4602822E33B00597D99 /* AccessibilityElement.swift */,
+				AA00000120260201AABBCC01 /* SpacesMover.swift */,
 				7034503F28238AAB00240BDD /* ScreenDetector.swift */,
 				70B2D58F2824254B0005D80A /* WindowManager.swift */,
 				700DF99928266F0B00C5FD0B /* ClipboardHelper.swift */,
@@ -603,6 +606,7 @@
 				700F266D29F52A25002CA8F1 /* CAGradiendLayer.swift in Sources */,
 				70B927632930AEEA00F883A0 /* ToastView.swift in Sources */,
 				701EC4612822E33B00597D99 /* AccessibilityElement.swift in Sources */,
+				AA00000220260201AABBCC01 /* SpacesMover.swift in Sources */,
 				7047E80827D4DAEB00582E1B /* Sequence.extension.swift in Sources */,
 				7074A3A228BDCB6B0032ADD7 /* CalendarHelper.mm in Sources */,
 				700F266929F5026B002CA8F1 /* BlurView.swift in Sources */,

@@ -100,8 +100,9 @@ export const createKeystrokeStore = (root: IRootStore) => {
 					break;
 				}
 
-				// enter key
-				case 36: {
+				// enter key (36 = Return, 76 = numpad Enter)
+				case 36:
+				case 76: {
 					if (root.ui.confirmDialogShown) {
 						root.ui.executeConfirmCallback();
 						return;
