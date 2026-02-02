@@ -119,9 +119,9 @@ const itemsThatShouldShowWindow = [
 
 function getInitials(name: string) {
 	return name
-		.toLowerCase()
-		.split(" ")
-		.map((s) => s.charAt(0))
+		.split(/[\s\-_]+|(?=[A-Z])/)
+		.filter((s) => s.length > 0)
+		.map((s) => s.charAt(0).toLowerCase())
 		.join("");
 }
 
