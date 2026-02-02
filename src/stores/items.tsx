@@ -396,6 +396,16 @@ export function createBaseItems(store: IRootStore) {
         solNative.moveFrontmostToNextSpace()
       },
     },
+    ...Array.from({length: 9}, (_, i) => ({
+      id: `focus_workspace_${i + 1}`,
+      icon: `${i + 1}️⃣`,
+      name: `Switch to workspace ${i + 1}`,
+      alias: `ws${i + 1}`,
+      type: ItemType.CONFIGURATION,
+      callback: () => {
+        solNative.focusSpace(i + 1)
+      },
+    })),
     {
       id: 'move_center',
       IconComponent: () => {

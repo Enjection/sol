@@ -382,6 +382,10 @@ class SolNative: RCTEventEmitter {
     WindowManager.sharedInstance.moveFrontmostToPreviousSpace()
   }
 
+  @objc func focusSpace(_ index: NSNumber) {
+    SpacesMover.focusSpace(index: index.intValue)
+  }
+
   @objc func pasteToFrontmostApp(_ content: String) {
     ClipboardHelper.pasteToFrontmostApp(content)
   }

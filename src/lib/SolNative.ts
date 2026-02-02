@@ -35,6 +35,7 @@ class SolNative extends NativeEventEmitter {
   moveFrontmostCenter: () => void
   moveFrontmostToNextSpace: () => void
   moveFrontmostToPreviousSpace: () => void
+  focusSpace: (index: number) => void
   pasteToFrontmostApp: (content: string) => void
   insertToFrontmostApp: (content: string) => void
 
@@ -210,6 +211,7 @@ class SolNative extends NativeEventEmitter {
 
     this.moveFrontmostToNextSpace = module.moveFrontmostToNextSpace
     this.moveFrontmostToPreviousSpace = module.moveFrontmostToPreviousSpace
+    this.focusSpace = module.focusSpace
     this.log = global.__SolProxy.log
     this.getApplications = global.__SolProxy.getApplications
     this.setHyperKeyEnabled = module.setHyperKeyEnabled
